@@ -20,7 +20,9 @@ public class SignupRequest {
   @Size(min = 6, max = 40)
   private String password;
   
-  private boolean isAdmin = false;
+  private boolean isLeader = false;
+  private Long teamId = 0L;
+  private String teamName="";
   @NotBlank
   private String phoneNo;
   @NotBlank
@@ -58,12 +60,12 @@ public class SignupRequest {
     this.role = role;
   }
 
-public boolean isAdmin() {
-	return isAdmin;
+public boolean isLeader() {
+	return isLeader;
 }
 
-public void setAdmin(boolean isAdmin) {
-	this.isAdmin = isAdmin;
+public void setLeader(boolean isAdmin) {
+	this.isLeader = isAdmin;
 }
 
 public String getPhoneNo() {
@@ -81,4 +83,22 @@ public String getName() {
 public void setName(String name) {
 	this.name = name;
 }
+
+
+
+  public String getTeamName() {
+    return teamName;
+  }
+
+  public void setTeamName(String teamName) {
+    this.teamName = teamName;
+  }
+
+  public Long getTeamId() {
+    return teamId;
+  }
+
+  public void setTeamId(Long teamId) {
+    this.teamId = teamId;
+  }
 }

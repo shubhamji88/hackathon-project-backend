@@ -25,7 +25,6 @@ import com.incedo.Hackathon.jwt.AuthEntryPointJwt;
 import com.incedo.Hackathon.jwt.AuthTokenFilter;
 import com.incedo.Hackathon.services.UserDetailsServiceImpl;
 
-import io.swagger.models.Contact;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
