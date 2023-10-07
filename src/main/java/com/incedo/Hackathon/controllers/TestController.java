@@ -18,14 +18,14 @@ public class TestController {
   }
 
   @GetMapping("/user")
-  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+  @PreAuthorize("hasRole('PARTICIPANT') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public String userAccess() {
     return "User Content.";
   }
 
   @GetMapping("/mod")
-  @PreAuthorize("hasRole('MODERATOR')")
-  public String moderatorAccess() {
+  @PreAuthorize("hasRole('PARTICIPANT')")
+  public String participantAccess() {
     return "Moderator Board.";
   }
 

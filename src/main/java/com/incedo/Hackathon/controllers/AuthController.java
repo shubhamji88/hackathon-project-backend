@@ -120,6 +120,12 @@ public class AuthController {
                             roles.add(panalistRole);
 
                             break;
+                        case "judge":
+                            Role judgeRole = roleRepository.findByName(ERole.ROLE_JUDGE)
+                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            roles.add(judgeRole);
+
+                            break;
                         default:
                             throw new RuntimeException("Error: Role is not supported. Please use admin , participant or panelist");
                     }
