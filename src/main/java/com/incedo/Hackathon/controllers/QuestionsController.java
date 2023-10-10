@@ -25,7 +25,7 @@ public class QuestionsController {
     }
 
     @GetMapping("/")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Question>> getAllQuestions() {
         List<Question> questions = questionsService.getAllQuestions();
         return ResponseEntity.ok(questions);

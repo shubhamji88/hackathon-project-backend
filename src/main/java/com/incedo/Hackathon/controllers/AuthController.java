@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
+import com.incedo.Hackathon.constants.UserRoleConstants;
 import com.incedo.Hackathon.models.Team;
 import com.incedo.Hackathon.repository.TeamRepository;
 import jakarta.validation.Valid;
@@ -93,7 +94,7 @@ public class AuthController {
                 signUpRequest.getName()
         );
 
-        Set<String> strRoles = signUpRequest.getRole();
+        Set<String> strRoles = roleCompatibleForUI(signUpRequest.getRole());
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
@@ -102,25 +103,25 @@ public class AuthController {
             try {
                 strRoles.forEach(role -> {
                     switch (role) {
-                        case "admin":
+                        case UserRoleConstants.ADMIN:
                             Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                             roles.add(adminRole);
 
                             break;
-                        case "participant":
-                            Role paticipantRole = roleRepository.findByName(ERole.ROLE_PARTICIPANT)
+                        case UserRoleConstants.PARTICIPANT:
+                            Role participantRole = roleRepository.findByName(ERole.ROLE_PARTICIPANT)
                                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                            roles.add(paticipantRole);
+                            roles.add(participantRole);
 
                             break;
-                        case "panelist":
-                            Role panalistRole = roleRepository.findByName(ERole.ROLE_PANELIST)
+                        case UserRoleConstants.PANELIST:
+                            Role panelistRole = roleRepository.findByName(ERole.ROLE_PANELIST)
                                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                            roles.add(panalistRole);
+                            roles.add(panelistRole);
 
                             break;
-                        case "judge":
+                        case UserRoleConstants.JUDGE:
                             Role judgeRole = roleRepository.findByName(ERole.ROLE_JUDGE)
                                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                             roles.add(judgeRole);
@@ -135,26 +136,41 @@ public class AuthController {
             }
 
         }
-        if (signUpRequest.getRole().contains("participant")) {
-            user.setLeader(signUpRequest.isLeader());
-            if (signUpRequest.isLeader()) {
+        if (signUpRequest.getRole().equals(UserRoleConstants.TEAM_LEADER)) {
                 Team t = new Team();
                 t.setTeamName(signUpRequest.getTeamName());
                 t = teamRepository.save(t);
                 user.setTeam(t);
-            } else {
-                Optional<Team> t = teamRepository.findById(signUpRequest.getTeamId());
+            } else if (signUpRequest.getRole().equals(UserRoleConstants.TEAM_MEMBER)){
+                if(signUpRequest.getTeamId().isBlank()){
+                    return ResponseEntity.status(401).body("Team id not found!!");
+                }
+                Long teamId;
+                try {
+                    teamId = Long.valueOf(signUpRequest.getTeamId());
+                }catch (Exception e){
+                    return ResponseEntity.status(401).body("Team id not right format!");
+                }
+                Optional<Team> t = teamRepository.findById(teamId);
                 if (t.isPresent()) {
                     user.setTeam(t.get());
                 } else {
-                    return ResponseEntity.status(401).body("Team id not found!!");
+                    return ResponseEntity.status(401).body("Team not found!!");
                 }
-            }
         }
+
 
         user.setRoles(roles);
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+    private Set<String> roleCompatibleForUI(String role) {
+        return switch (role) {
+            case UserRoleConstants.TEAM_LEADER, UserRoleConstants.TEAM_MEMBER -> Set.of(UserRoleConstants.PARTICIPANT);
+            case UserRoleConstants.PANELIST -> Set.of(UserRoleConstants.PANELIST);
+            case UserRoleConstants.JUDGE -> Set.of(UserRoleConstants.JUDGE);
+            default -> Set.of();
+        };
     }
 }

@@ -14,14 +14,14 @@ public class SignupRequest {
   @Email
   private String email;
 
-  private Set<String> role;
+  private String role;
 
   @NotBlank
   @Size(min = 6, max = 40)
   private String password;
   
   private boolean isLeader = false;
-  private Long teamId = 0L;
+  private String teamId = "";
   private String teamName="";
   @NotBlank
   private String phoneNo;
@@ -52,11 +52,11 @@ public class SignupRequest {
     this.password = password;
   }
 
-  public Set<String> getRole() {
+  public String getRole() {
     return this.role;
   }
 
-  public void setRole(Set<String> role) {
+  public void setRole(String role) {
     this.role = role;
   }
 
@@ -94,11 +94,11 @@ public void setName(String name) {
     this.teamName = teamName;
   }
 
-  public Long getTeamId() {
+  public String getTeamId() {
     return teamId;
   }
 
-  public void setTeamId(Long teamId) {
+  public void setTeamId(String teamId) {
     this.teamId = teamId;
   }
 }
