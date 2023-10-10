@@ -1,6 +1,7 @@
 package com.incedo.Hackathon.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "status")
@@ -8,7 +9,7 @@ public class HackathonStatus {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
+  @NotBlank
   private String statusName;
 
   private String startTimeStamp;
